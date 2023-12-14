@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import java.awt.*;
 
@@ -29,7 +30,11 @@ public class SignUpStruct extends Frame implements ActionListener{
     JTextField tfEmail = new JTextField();
     JTextField tfAddress = new JTextField();
 
-    RoundedButton button = new RoundedButton("Sign Up");
+    RoundedButton btSignUp = new RoundedButton("Sign Up");
+    RoundedButton btClear = new RoundedButton("Clear");
+    RoundedButton btBack = new RoundedButton("Back");
+
+    boolean Condition;
 
     public SignUpStruct(){
         super();
@@ -37,57 +42,73 @@ public class SignUpStruct extends Frame implements ActionListener{
     }
     public void init(){
         //First Name
-        lbFirstName.setBounds(100, 20, 300, 50);
+        lbFirstName.setBounds(100, 50, 300, 50);
         lbFirstName.setFont(mainFont);
         lbFirstName.setForeground(Color.BLACK);
 
-        tfFirstName.setBounds(400, 20, 600, 50);
+        tfFirstName.setBounds(400, 50, 600, 50);
         tfFirstName.setFont(mainFont);
         tfFirstName.setForeground(Color.BLACK);
 
         //Last Name
-        lbLastName.setBounds(100, 100, 300, 50);
+        lbLastName.setBounds(100, 110, 300, 50);
         lbLastName.setFont(mainFont);
         lbLastName.setForeground(Color.BLACK);
 
-        tfLastName.setBounds(400, 100, 600, 50);
+        tfLastName.setBounds(400, 110, 600, 50);
         tfLastName.setFont(mainFont);
         tfLastName.setForeground(Color.BLACK);
 
         //Phone
-        lbPhone.setBounds(100, 200, 300, 50);
+        lbPhone.setBounds(100, 170, 300, 50);
         lbPhone.setFont(mainFont);
         lbPhone.setForeground(Color.BLACK);
 
-        tfPhone.setBounds(400, 200, 600, 50);
+        tfPhone.setBounds(400, 170, 600, 50);
         tfPhone.setFont(mainFont);
         tfPhone.setForeground(Color.BLACK);
 
         //Email
-        lbEmail.setBounds(100, 300, 300, 50);
+        lbEmail.setBounds(100, 230, 300, 50);
         lbEmail.setFont(mainFont);
         lbEmail.setForeground(Color.BLACK);
 
-        tfEmail.setBounds(400, 300, 600, 50);
+        tfEmail.setBounds(400, 230, 600, 50);
         tfEmail.setFont(mainFont);
         tfEmail.setForeground(Color.BLACK);
 
         //Address
-        lbAddress.setBounds(100, 400, 300, 50);
+        lbAddress.setBounds(100, 290, 300, 50);
         lbAddress.setFont(mainFont);
         lbAddress.setForeground(Color.BLACK);
 
-        tfAddress.setBounds(400, 400, 600, 50);
+        tfAddress.setBounds(400, 290, 600, 50);
         tfAddress.setFont(mainFont);
         tfAddress.setForeground(Color.BLACK);
 
-        //Button
-        button.setBounds(550,600,250,50);
-        button.setFont(mainFont);
-        button.setBackground(bloodColor);
-        button.setForeground(Color.WHITE);
-        button.setFocusable(false);
-        button.addActionListener(this);
+        //btSignUp
+        btSignUp.setBounds(800,600,200,50);
+        btSignUp.setFont(mainFont);
+        btSignUp.setBackground(bloodColor);
+        btSignUp.setForeground(Color.WHITE);
+        btSignUp.setFocusable(false);
+        btSignUp.addActionListener(this);
+
+        //btClear
+        btClear.setBounds(490,600,200,50);
+        btClear.setFont(mainFont);
+        btClear.setBackground(bloodColor);
+        btClear.setForeground(Color.WHITE);
+        btClear.setFocusable(false);
+        btClear.addActionListener(this);
+
+        //btBack
+        btBack.setBounds(70,600,200,50);
+        btBack.setFont(mainFont);
+        btBack.setBackground(bloodColor);
+        btBack.setForeground(Color.WHITE);
+        btBack.setFocusable(false);
+        btBack.addActionListener(this);
 
         //Frame Setting
         this.setLayout(null);
@@ -102,22 +123,74 @@ public class SignUpStruct extends Frame implements ActionListener{
         this.add(tfLastName);
         this.add(tfPhone);
         this.add(tfEmail);
-        this.add(tfAddress);;
+        this.add(tfAddress);
 
-        this.add(button);
+        this.add(btSignUp);
+        this.add(btClear);
+        this.add(btBack);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == button){
-            signUpCompleted(false);
+
+    }
+
+    public static boolean signUpCompleted(boolean isSignUpCompleted){
+        if(isSignUpCompleted == true){
+            JOptionPane.showMessageDialog(null, "Sign Up successful", "Message", JOptionPane.DEFAULT_OPTION);
+            return true;           
+        }else{
+            JOptionPane.showMessageDialog(null, "You can not sign up, pls reset the app", "Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }    
+    }
+
+    public boolean confirmToClear(){
+        int confirmToClear = JOptionPane.showConfirmDialog(null, "Are you sure to clear all the data", "Confirm ?", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+        if(confirmToClear == JOptionPane.YES_OPTION){
+            return true;
+        }else{
+            return false;
         }
     }
 
-    public void signUpCompleted(boolean isSignUpCompleted){
-        if(isSignUpCompleted == true){
-            System.out.println("Hello");
+    public void clearContent(){
+        this.tfFirstName.setText("");
+        this.tfLastName.setText("");
+        this.tfEmail.setText("");
+        this.tfPhone.setText("");
+        this.tfAddress.setText("");
+        this.repaint();
+    }
+    public boolean isFieldNull(){
+        if(tfFirstName.getText().trim().isEmpty() || tfLastName.getText().trim().isEmpty() || tfEmail.getText().trim().isEmpty() || tfAddress.getText().trim().isEmpty() || tfPhone.getText().trim().isEmpty()){
+            return true;
         }else{
-            JOptionPane.showMessageDialog(null, "You can not sign up", "Warning", JOptionPane.WARNING_MESSAGE);
-        }    
+            return false;
+        }
+    }
+    public void processInBackGround(String userType){
+        SwingWorker <Void, Void > worker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground(){
+                btBack.setEnabled(false);
+                if(userType.equals("donor")){
+                    setVisible(false);
+
+                    DonorHome.getInstance().setVisible(true);
+                    DonorHome.restInstance();
+                }else if(userType.equals("staff")){
+                    setVisible(false);
+                    
+                    StaffHome.getInstance().setVisible(true);
+                    StaffHome.restInstance();
+                }
+                return null;
+            }
+            protected void done(){
+                btBack.setEnabled(true);
+            }
+        };
+        worker.execute();
     }
 }

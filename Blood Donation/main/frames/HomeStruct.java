@@ -7,19 +7,23 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 
 import main.button.RoundedButton;
 import main.Frame;
+import main.sql.ConnectSQL;
 
 public class HomeStruct extends Frame implements ActionListener{
 
-    String user;
+    static String user;
     private char[] password;
-    private String passwordStr;
+    private static String passwordStr;
+    private static int ID;
 
     Font mainFont = new Font(null, Font.CENTER_BASELINE, 30);
     Font signFont = mainFont.deriveFont(80f);
@@ -43,6 +47,7 @@ public class HomeStruct extends Frame implements ActionListener{
     
     RoundedButton btLogin = new RoundedButton("Login");
     RoundedButton btSignUp = new RoundedButton("Sign Up");
+    RoundedButton btBack = new RoundedButton("Back");
 
     Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
 
@@ -50,9 +55,10 @@ public class HomeStruct extends Frame implements ActionListener{
 
     public HomeStruct(String Who){
         super();
+
         /*Stuffs set */
         //Sign Place
-        lbSign.setBounds(125, 220, 300, 200);
+        lbSign.setBounds(150, 220, 300, 200);
         lbSign.setFont(signFont);
         lbSign.setForeground(Color.WHITE);
         lbSign.setText(Who);
@@ -88,6 +94,7 @@ public class HomeStruct extends Frame implements ActionListener{
         btLogin.setBackground(bloodColor);
         btLogin.setForeground(Color.WHITE);
         btLogin.setFocusable(false);
+        btLogin.setEnabled(true);
         btLogin.addActionListener(this);
 
         btSignUp.setBounds(450, 550, 250, 100);
@@ -95,11 +102,20 @@ public class HomeStruct extends Frame implements ActionListener{
         btSignUp.setBackground(bloodColor);
         btSignUp.setForeground(Color.WHITE);
         btSignUp.setFocusable(false);
+        btSignUp.setEnabled(true);
         btSignUp.addActionListener(this);
 
         lbSignUp.setBounds(260, 100, 350, 100);
         lbSignUp.setFont(signFont);
         lbSignUp.setForeground(Color.BLACK);
+
+        btBack.setBounds(50,620, 150, 50);
+        btBack.setFont(mainFont.deriveFont(30f));
+        btBack.setBackground(Color.WHITE);
+        btBack.setForeground(bloodColor);
+        btBack.setEnabled(true);
+        btBack.setFocusable(false);
+        btBack.addActionListener(this);
 
         PnPlace.setBounds(500, 0, 780, 720);
         PnPlace.setBackground(Color.WHITE);
@@ -112,6 +128,8 @@ public class HomeStruct extends Frame implements ActionListener{
         PnPlace.add(btLogin);
         PnPlace.add(btSignUp);
 
+        PnSign.add(btBack);
+
         PnMain.setBounds(0, 0, 1280, 720);
         PnMain.setLayout(null);
         PnMain.add(PnPlace);
@@ -119,37 +137,34 @@ public class HomeStruct extends Frame implements ActionListener{
 
         /*Frame setting */
         this.add(PnMain);
-        this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btSignUp){
-            if(isSignUpClicked == false){
-                pressed1SignUp();
-            }else{
-                pressed2SignUp();
-            }
-        }
-        else if(e.getSource() == btLogin){
-            getInput();
-        }
+
     }
 
     public void getInput(){
-        this.user = tfUser.getText();
+        user = tfUser.getText();
         this.password = pfPassword.getPassword();
-        this.passwordStr = new String(password);
+        passwordStr = new String(password);
     }
 
-    public void pressed1SignUp(){
+    public void pressed1SignUp(String userType){
         PnPlace.remove(lbLogin);
         PnPlace.remove(btLogin);
 
         PnPlace.add(lbSignUp);
         btSignUp.setBounds(280, 550, 300, 100);
-        tfUser.setEditable(false);
+        tfUser.setText(null);
         pfPassword.setText(null);
+
+        if(ConnectSQL.loadID(userType) != 0){
+            ID = ConnectSQL.loadID(userType);
+        }else{
+            JOptionPane.showMessageDialog(null, "There is some error, pls try again", "Warning", JOptionPane.WARNING_MESSAGE);
+            this.dispose();
+        }
 
         isSignUpClicked = true;
     }
@@ -163,7 +178,43 @@ public class HomeStruct extends Frame implements ActionListener{
         PnPlace.repaint();
     }
 
-    public String getStrToEncrypt() {
+    public static String getStrToEncrypt() {
         return passwordStr;
+    }
+
+    public static int getID(){
+        return ID;
+    }
+     
+    public void backToHome(){
+        this.dispose();
+        Home home = new Home();
+        home.setVisible(true);
+    }
+
+    public void processInBackGround(String userType){
+        SwingWorker <Void, Void > worker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground(){
+                btBack.setEnabled(false);
+                if(userType.equals("donor")){
+                    setVisible(false);
+
+                    DonorHome.getInstance().setVisible(true);
+                    DonorHome.restInstance();
+                }else if(userType.equals("staff")){
+                    setVisible(false);
+                    
+                    StaffHome.getInstance().setVisible(true);
+                    StaffHome.restInstance();
+                }
+                return null;
+            }
+            protected void done(){
+                btBack.setEnabled(true);
+            }
+        };
+        worker.execute();
     }
 }

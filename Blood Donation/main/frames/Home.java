@@ -3,12 +3,15 @@ package main.frames;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.*;
 
 import main.Frame;
 import main.button.RoundedButton;
 
-public class Home extends Frame{
+public class Home extends Frame implements KeyListener{
 
     Font buttonFont = new Font(null, Font.CENTER_BASELINE, 50);
     Color greyColor = new Color(217, 217, 217);
@@ -77,25 +80,30 @@ public class Home extends Frame{
 
         /*Frame set */
         this.add(pnBackGround);
-        this.setVisible(true);
+        this.addKeyListener(this);
     }
+
     public void staffButton(){
-        System.out.println("Staff");
-                        
         StaffHome staffHome = new StaffHome();
-        this.setVisible(false);
+        this.dispose();
         staffHome.setVisible(true);
-        
-        System.out.println("Staff Home");
     }
     public void donorButton(){
-        System.out.println("Donor");
-
         DonorHome donorHome = new DonorHome();
-        
-        this.setVisible(false);
+        this.dispose();
         donorHome.setVisible(true);
+    }
 
-        System.out.println("Donor Home");
+    public void keyPressed(KeyEvent e){
+        if(e.getKeyCode() == KeyEvent.VK_A){
+            AdminHome.getInstance().setVisible(true);
+            this.dispose();
+        }
+    }
+    public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
+    }
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
 }

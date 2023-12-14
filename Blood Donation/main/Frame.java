@@ -9,7 +9,7 @@ public class Frame extends JFrame{
     Dimension dimension = new Dimension(screenWidth, screenHeight);
 
     public Frame(){
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(dimension);
         this.setResizable(false);
         this.setTitle("Blood Donation");

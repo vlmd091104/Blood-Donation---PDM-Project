@@ -1,10 +1,14 @@
 package main.frames;
 import java.awt.event.ActionEvent;
 
+import javax.swing.*;
+
 import main.encrypt.Encrypt;
 import main.sql.ConnectSQL;
 
 public class StaffHome extends HomeStruct{
+
+    private static StaffHome instance;
     
     public StaffHome(){
         super("Staff");
@@ -14,20 +18,46 @@ public class StaffHome extends HomeStruct{
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == btSignUp){
             if(isSignUpClicked == false){
-                super.pressed1SignUp();
-                this.tfUser.setText(ConnectSQL.loadID());
+                super.pressed1SignUp("staff");
                 super.repaintMethod();
             }else{
                 super.pressed2SignUp();
-                ConnectSQL.addPassword(Integer.valueOf(this.tfUser.getText()), Encrypt.encrypt(this.getStrToEncrypt()));
 
-                SignUpStruct nextFrame = new StaffSignUp();
-                this.dispose();
-                nextFrame.setVisible(true);
+                if(tfUser.getText().trim().isEmpty()||getStrToEncrypt().trim().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "There is some empty fields, pls fill in the empty", "Message", JOptionPane.WARNING_MESSAGE);
+                    isSignUpClicked = true;
+                }else{
+                    SignUpStruct nextFrame = new StaffSignUp();
+                    this.dispose();
+                    nextFrame.setVisible(true);
+                }
             }
         }else if(e.getSource() == btLogin){
             super.getInput();
-            ConnectSQL.isValid(Integer.valueOf(this.user),Encrypt.encrypt(this.getStrToEncrypt()));
+            boolean isValid = ConnectSQL.isValid("staff", user,Encrypt.encrypt(getStrToEncrypt()));
+            if(isValid == true){
+                this.dispose();
+
+                DashBoardStruct run = new DashBoardStruct();
+                run.setVisible(true);
+            }
+        }else if(e.getSource() == btBack){
+            if(isSignUpClicked == true){
+                super.processInBackGround("staff");
+            }else{
+                super.backToHome();
+            }
         }
+    }
+
+    public static StaffHome getInstance() {
+        if (instance == null) {
+            instance = new StaffHome();
+        }
+        return instance;
+    }
+    public static StaffHome restInstance(){
+        instance = null;
+        return instance;
     }
 }
