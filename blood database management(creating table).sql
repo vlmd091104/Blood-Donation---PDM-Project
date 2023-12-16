@@ -116,3 +116,15 @@ CREATE TABLE BloodDonationAdverseReactions (
   FOREIGN KEY (DonationID) REFERENCES BloodDonation(DonationID),
   FOREIGN KEY (ReactionID) REFERENCES AdverseReactions(ReactionID)
 );
+
+create table DonorPassword(
+	DonorID int primary key,
+	DonorPassword varchar(50),
+	Foreign key (DonorID) references Donor(DonorID)
+);
+
+Create table StaffPassword(
+	StaffID int primary key,
+	StaffPassword varchar(50),
+	Foreign key (StaffID) references Staff(StaffID)
+);
