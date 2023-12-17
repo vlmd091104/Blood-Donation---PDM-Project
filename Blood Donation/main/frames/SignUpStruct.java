@@ -33,6 +33,7 @@ public class SignUpStruct extends Frame implements ActionListener{
     RoundedButton btSignUp = new RoundedButton("Sign Up");
     RoundedButton btClear = new RoundedButton("Clear");
     RoundedButton btBack = new RoundedButton("Back");
+    RoundedButton btUpdate = new RoundedButton("Update");
 
     boolean Condition;
 
@@ -110,6 +111,15 @@ public class SignUpStruct extends Frame implements ActionListener{
         btBack.setFocusable(false);
         btBack.addActionListener(this);
 
+        //btUpdate using in info frame
+        btUpdate.setBounds(800,600,200,50);
+        btUpdate.setFont(mainFont);
+        btUpdate.setBackground(bloodColor);
+        btUpdate.setForeground(Color.WHITE);
+        btUpdate.setFocusable(false);
+        btUpdate.setVisible(false);
+        btUpdate.addActionListener(this);
+
         //Frame Setting
         this.setLayout(null);
 
@@ -128,13 +138,15 @@ public class SignUpStruct extends Frame implements ActionListener{
         this.add(btSignUp);
         this.add(btClear);
         this.add(btBack);
+        this.add(btUpdate);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
 
     }
 
-    public static boolean signUpCompleted(boolean isSignUpCompleted){
+    //Method for SignUp
+    public boolean signUpCompleted(boolean isSignUpCompleted){
         if(isSignUpCompleted == true){
             JOptionPane.showMessageDialog(null, "Sign Up successful", "Message", JOptionPane.DEFAULT_OPTION);
             return true;           
@@ -192,5 +204,12 @@ public class SignUpStruct extends Frame implements ActionListener{
             }
         };
         worker.execute();
+    }
+    public void setData(String firstName, String lastName, String email, String phone, String address){
+        tfFirstName.setText(firstName);
+        tfLastName.setText(lastName);
+        tfEmail.setText(email);
+        tfPhone.setText(phone);
+        tfAddress.setText(address);
     }
 }

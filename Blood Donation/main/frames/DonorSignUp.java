@@ -50,12 +50,12 @@ public class DonorSignUp extends SignUpStruct{
             if(tfDoB.getText().trim().isEmpty() || super.isFieldNull()){
                 JOptionPane.showMessageDialog(null, "There is some empty fields, pls fill in the empty", "Message", JOptionPane.WARNING_MESSAGE);
             }else{
+                // ConnectSQL.addPassword("donor" ,HomeStruct.getID(),HomeStruct.user, Encrypt.encrypt(HomeStruct.getStrToEncrypt()));
                 boolean isComplete = super.signUpCompleted(ConnectSQL.addData("donor", HomeStruct.getID(), this.tfFirstName.getText(), this.tfLastName.getText(), this.tfDoB.getText(), (String)this.box.getSelectedItem(), this.tfEmail.getText(), this.tfPhone.getText(), this.tfAddress.getText(), null));
                 if(isComplete == true){
                     ConnectSQL.addPassword("donor" ,HomeStruct.getID(),HomeStruct.user, Encrypt.encrypt(HomeStruct.getStrToEncrypt()));
                     this.dispose();
-
-                    DashBoardStruct run = new DashBoardStruct();
+                    DashBoardStruct run = new DonorDashBoard();
                     run.setVisible(true);
                 }
             }

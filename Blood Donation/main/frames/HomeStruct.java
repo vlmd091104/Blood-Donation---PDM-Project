@@ -139,6 +139,21 @@ public class HomeStruct extends Frame implements ActionListener{
         this.add(PnMain);
     }
 
+    public HomeStruct(){
+        super();
+
+        lbPassword.setBounds(100, 50, 200, 50);
+        lbPassword.setFont(mainFont);
+        lbPassword.setForeground(Color.BLACK);
+
+        pfPassword.setBounds(300, 50, 300, 50);
+        pfPassword.setFont(mainFont);
+        pfPassword.setBorder(blackLine);
+
+        this.add(lbPassword);
+        this.add(pfPassword);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -184,6 +199,10 @@ public class HomeStruct extends Frame implements ActionListener{
 
     public static int getID(){
         return ID;
+    }
+
+    public static void setID(int id){
+        ID = id;
     }
      
     public void backToHome(){

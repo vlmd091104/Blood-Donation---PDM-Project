@@ -39,7 +39,7 @@ public class DonorHome extends HomeStruct{
             if(isValid == true){
                 this.dispose();
 
-                DashBoardStruct run = new DashBoardStruct();
+                DashBoardStruct run = new DonorDashBoard();
                 run.setVisible(true);
             }
         }else if(e.getSource() == btBack){;
