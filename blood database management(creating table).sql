@@ -10,8 +10,6 @@ CREATE TABLE Donor (
   Email VARCHAR(100),
   Address VARCHAR(100),
 );
-ALTER TABLE Donor
-ADD FOREIGN KEY (MedicalHistoryID) REFERENCES MedicalHistory(MedicalHistoryID)
 
 -- Recipient table
 CREATE TABLE Recipient (
@@ -21,9 +19,6 @@ CREATE TABLE Recipient (
   DonationType VARCHAR(50),
   PRIMARY KEY (DonorID, DonationID),
 );
-ALTER TABLE Recipient
-ADD FOREIGN KEY (DonorID) REFERENCES Donor(DonorID),
-	FOREIGN KEY (DonationID) REFERENCES BloodDonation(DonationID)
 	 
 -- BloodDonation table
 CREATE TABLE BloodDonation (
@@ -32,10 +27,6 @@ CREATE TABLE BloodDonation (
   StaffID INT,
   DonorID INT,
 );
-ALTER TABLE BloodDonation
-ADD	FOREIGN KEY (BloodBagID) REFERENCES BloodBank(BloodBagID),
-	FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-	FOREIGN KEY (DonorID) REFERENCES Donor(DonorID)
 
 -- BloodBank table
 CREATE TABLE BloodBank (
@@ -55,8 +46,6 @@ CREATE TABLE MedicalHistory (
   TestResults VARCHAR(100),
   ReactionID INT,
 );
-ALTER TABLE MedicalHistory
-ADD FOREIGN KEY (ReactionID) REFERENCES AdverseReactions(ReactionID)
 
 -- AdverseReactions table
 CREATE TABLE AdverseReactions (
@@ -66,8 +55,6 @@ CREATE TABLE AdverseReactions (
   ReactionDate DATE,
   Severity VARCHAR(50),
 );
-ALTER TABLE AdverseReactions
-ADD FOREIGN KEY (DonationID) REFERENCES BloodDonation(DonationID)
 
 -- Staff table
 CREATE TABLE Staff (
@@ -80,8 +67,6 @@ CREATE TABLE Staff (
   Role VARCHAR(50),
   DonorID INT,
 );
-ALTER TABLE Staff
-ADD FOREIGN KEY (DonorID) REFERENCES Donor(DonorID)
 
 -- StaffDonor table (Staff to Donor relationship)
 CREATE TABLE StaffDonor (
@@ -119,12 +104,35 @@ CREATE TABLE BloodDonationAdverseReactions (
 
 create table DonorPassword(
 	DonorID int primary key,
+	userName varchar(50),
 	DonorPassword varchar(50),
 	Foreign key (DonorID) references Donor(DonorID)
 );
 
 Create table StaffPassword(
 	StaffID int primary key,
+	userName varchar(50),
 	StaffPassword varchar(50),
 	Foreign key (StaffID) references Staff(StaffID)
 );
+
+ALTER TABLE Donor
+ADD FOREIGN KEY (MedicalHistoryID) REFERENCES MedicalHistory(MedicalHistoryID)
+
+ALTER TABLE Recipient
+ADD FOREIGN KEY (DonorID) REFERENCES Donor(DonorID),
+	FOREIGN KEY (DonationID) REFERENCES BloodDonation(DonationID)
+
+ALTER TABLE BloodDonation
+ADD	FOREIGN KEY (BloodBagID) REFERENCES BloodBank(BloodBagID),
+	FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+	FOREIGN KEY (DonorID) REFERENCES Donor(DonorID)
+
+ALTER TABLE MedicalHistory
+ADD FOREIGN KEY (ReactionID) REFERENCES AdverseReactions(ReactionID)
+
+ALTER TABLE AdverseReactions
+ADD FOREIGN KEY (DonationID) REFERENCES BloodDonation(DonationID)
+
+ALTER TABLE Staff
+ADD FOREIGN KEY (DonorID) REFERENCES Donor(DonorID)
